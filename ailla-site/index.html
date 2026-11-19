@@ -1,0 +1,1009 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ailla</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0A0A0B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Sora:wght@500;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one phone-width app column. Black + champagne-gold "digital assistant" identity; entry screen is an app-icon hero; bottom tab bar */
+:root{
+  color-scheme:dark;
+  --bg:#09090A; --surface:#141416; --ink:#F6F2E9; --muted:#A8A294;
+  --accent:#E6BC6A; --accent-soft:#221C10; --on-accent:#17110A;
+  --glow:#F0C879; --glow-soft:#2A2213; --night:#050506; --night-2:#1D1A14; --night-ink:#FBF7EC;
+  --warn:#F0B35A; --warn-soft:#2B2212; --ok:#6FD39A; --ok-soft:#10261A; --bad:#F28B7E; --bad-soft:#2C1512;
+  --line:#2B2A27;
+  --grad:linear-gradient(135deg,#FBE6B0 0%,#E6BC6A 38%,#B98A3C 72%,#E9C98A 100%);
+  --display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --fs:16px;
+}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);margin:0}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--glow);outline-offset:2px}
+
+.app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;font-size:var(--fs);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+/* Idoso: same black + gold, but warmer, calmer and with extra contrast and bigger touch targets */
+.app[data-mode="idoso"]{--fs:19px;--muted:#CFC8B8;--line:#3A362D;--accent:#F2C976;--night-2:#2A2112;
+  --grad:linear-gradient(135deg,#FFF0C6 0%,#F2C976 45%,#D9A74A 100%)}
+.app[data-mode="idoso"] .btn{padding:16px 20px}
+.app[data-mode="idoso"] .card{border-radius:20px}
+/* Kids: colorful icon + playful palette and rounded display font */
+.app[data-mode="kids"]{--accent:#B49BFF;--accent-soft:#251D49;--on-accent:#14082E;--glow:#FFD166;--glow-soft:#2E2610;--night-2:#2B1B5C;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --grad:linear-gradient(135deg,#B49BFF 0%,#FF8AC2 55%,#FFC15E 100%)}
+.app[data-mode="acessivel"]{--fs:20px;
+  --bg:#000;--surface:#000;--ink:#FFF;--muted:#E6E6E6;--accent:#FFE14D;--accent-soft:#1E1E1E;--on-accent:#000;
+  --glow:#FFE14D;--glow-soft:#2A2400;--night:#000;--night-2:#000;--night-ink:#FFF;
+  --warn:#FFE14D;--warn-soft:#2A2400;--ok:#7CFFA0;--ok-soft:#002A10;--bad:#FF8A80;--bad-soft:#2A0000;--line:#FFF;--grad:#FFE14D;
+  background:var(--bg);color:var(--ink);color-scheme:dark}
+.app[data-mode="acessivel"] .card,.app[data-mode="acessivel"] .chip{border-width:2px}
+body.hc{background:#000}
+
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px 6px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand svg{width:42px;height:42px;flex:none}
+.brand b{font-family:var(--display);font-size:1.45em;line-height:1;font-weight:800;letter-spacing:-.02em}
+.brand small{display:block;color:var(--muted);font-size:.72em}
+.proto{font-size:.7em;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:3px 9px;white-space:nowrap}
+
+main{flex:1;display:flex;flex-direction:column;gap:18px;padding-block:8px 110px}
+.screen{display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:1.7em} h2{font-size:1.25em} h3{font-size:1.05em}
+p{margin:0;line-height:1.5}
+.muted{color:var(--muted)}
+.label{font-size:.72em;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+
+/* hero: app-splash style entry screen. Gold app icon on black, bold type, soft grid + glow */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:22px 20px 22px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-height:230px;
+  background:radial-gradient(90% 70% at 85% 0%, rgba(230,188,106,.22), transparent 60%),radial-gradient(120% 120% at 0% 100%, var(--night-2), var(--night) 65%);
+  color:var(--night-ink);border:1px solid rgba(230,188,106,.22);box-shadow:0 18px 50px -24px rgba(230,188,106,.35), inset 0 1px 0 rgba(255,255,255,.06)}
+.hero .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(230,188,106,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(230,188,106,.07) 1px,transparent 1px);
+  background-size:26px 26px;-webkit-mask-image:radial-gradient(80% 90% at 90% 0%,#000,transparent 75%);mask-image:radial-gradient(80% 90% at 90% 0%,#000,transparent 75%)}
+.hero>*{position:relative}
+.hero .hero-head{display:flex;align-items:center;gap:14px;width:100%}
+.hero svg.mascot{width:92px;height:92px;flex:none;filter:drop-shadow(0 10px 24px rgba(230,188,106,.35))}
+.hero .tag{white-space:nowrap;display:inline-flex;align-items:center;gap:7px;font-size:.68em;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--glow);
+  border:1px solid rgba(230,188,106,.35);background:rgba(230,188,106,.08);border-radius:99px;padding:5px 11px}
+.hero .tag i{width:6px;height:6px;border-radius:50%;background:var(--glow);box-shadow:0 0 8px var(--glow)}
+.hero .slogan{font-family:var(--display);font-weight:800;font-size:1.85em;line-height:1.04;letter-spacing:-.03em}
+.hero .slogan em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hero p{font-size:.92em;opacity:.82;margin-top:8px;max-width:30ch}
+.hero .dot{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--glow);opacity:.7}
+.app[data-mode="acessivel"] .hero{border:2px solid #fff;box-shadow:none}
+.app[data-mode="acessivel"] .hero .hero-grid{display:none}
+/* idoso: calmer hero, no tech grid, bigger icon */
+.app[data-mode="idoso"] .hero .hero-grid{display:none}
+.app[data-mode="idoso"] .hero .tag,.app[data-mode="acessivel"] .hero .tag{font-size:.56em;letter-spacing:.1em}
+.app[data-mode="idoso"] .hero svg.mascot{width:104px;height:104px}
+.app[data-mode="idoso"] .hero{background:radial-gradient(120% 120% at 0% 100%, var(--night-2), var(--night) 70%)}
+/* kids: confetti glow */
+.app[data-mode="kids"] .hero{border-color:rgba(255,138,194,.35);box-shadow:0 18px 50px -24px rgba(180,155,255,.5);
+  background:radial-gradient(90% 70% at 90% 0%, rgba(255,138,194,.28), transparent 60%),radial-gradient(120% 120% at 0% 100%, var(--night-2), var(--night) 70%)}
+.app[data-mode="kids"] .hero .hero-grid{display:none}
+.app[data-mode="kids"] .hero .tag{color:#FFC15E;border-color:rgba(255,193,94,.4);background:rgba(255,193,94,.1)}
+.app[data-mode="kids"] .hero .tag i{background:#FFC15E;box-shadow:0 0 8px #FFC15E}
+.app[data-mode="kids"] .hero .dot{width:7px;height:7px;opacity:.85}
+.app[data-mode="kids"] .hero i.dot:nth-of-type(1){background:#4DE1FF}
+.app[data-mode="kids"] .hero i.dot:nth-of-type(2){background:#FF8AC2}
+.app[data-mode="kids"] .hero i.dot:nth-of-type(3){background:#7CFFB2}
+.app[data-mode="kids"] .hero i.dot:nth-of-type(4){background:#FFC15E}
+.app[data-mode="kids"] .hero i.dot:nth-of-type(5){background:#B49BFF}
+
+.greet{display:flex;flex-direction:column;gap:4px}
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.82em}
+.chip span{font-size:.78em;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--grad);color:var(--on-accent);border-color:transparent;font-weight:700}
+.chip[aria-pressed="true"] span{color:var(--on-accent);opacity:.85}
+.mode-note{font-size:.88em;color:var(--muted)}
+
+.ask{display:flex;gap:8px}
+.ask input,.field{flex:1;min-width:0;font:inherit;padding:14px 18px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.ask input::placeholder{color:var(--muted)}
+.ask input:focus{border-color:var(--accent)}
+.ask .btn{border-radius:99px;padding-inline:22px}
+.field{border-radius:16px}
+.btn{border:0;border-radius:16px;padding:14px 18px;font-weight:700;background:var(--grad);color:var(--on-accent);text-decoration:none;text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.ghost{background:var(--accent-soft);color:var(--ink)}
+.btn.line{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.glow{background:var(--grad);color:#17110A}
+.btn[disabled]{opacity:.6;cursor:wait}
+.examples{display:flex;flex-wrap:wrap;gap:6px}
+.examples button{border:1px dashed var(--line);background:none;border-radius:99px;padding:6px 12px;font-size:.82em;color:var(--muted)}
+.thinking{display:flex;gap:10px;align-items:center}
+.thinking svg{width:46px;height:46px;flex:none}
+.note{font-size:.9em;color:var(--muted)}
+
+.pillar{display:flex;flex-direction:column;gap:10px}
+.pillar-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pillar-head .verb{font-family:var(--display);font-size:1.15em;font-weight:800;color:var(--accent)}
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.task{display:flex;align-items:center;gap:12px;text-align:left;width:100%}
+.task .ic{width:42px;height:42px;flex:none;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
+.task .ic svg{width:22px;height:22px}
+.task div{min-width:0;flex:1}
+.task b{display:block}
+.task small{color:var(--muted);font-size:.85em}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs .in{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{background:none;border:0;padding:11px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.78em;color:var(--muted)}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:700}
+body.hc nav.tabs{background:#000;border-top:2px solid #fff}
+body.hc nav.tabs button{color:#E6E6E6;font-size:.92em}
+body.hc nav.tabs button[aria-current="page"]{color:#FFE14D}
+
+/* guide */
+.guide{display:flex;flex-direction:column;gap:16px}
+.back{background:none;border:0;padding:0;color:var(--muted);display:inline-flex;align-items:center;gap:6px;align-self:flex-start}
+.progress{display:flex;gap:6px}
+.progress i{flex:1;height:8px;border-radius:99px;background:var(--line)}
+.progress i.on{background:var(--grad)}
+.stepnum{font-family:var(--display);font-weight:800;color:var(--accent);font-size:1.05em}
+.instr{font-family:var(--display);font-size:1.5em;line-height:1.2;font-weight:700}
+.bubble{display:flex;gap:8px;align-items:flex-start}
+.bubble svg{width:48px;height:48px;flex:none}
+.bubble .card{flex:1;min-width:0}
+.alert{border-radius:16px;padding:14px 16px;background:var(--warn-soft);border-left:5px solid var(--warn)}
+.alert b{color:var(--warn)}
+.help{background:var(--accent-soft);border-radius:16px;padding:14px 16px}
+.adult{background:var(--bad-soft);border-left:5px solid var(--bad);border-radius:16px;padding:14px 16px}
+.go{display:flex;flex-direction:column;gap:10px;background:var(--glow-soft);border-radius:18px;padding:14px 16px}
+.go .row a{flex:1 1 40%}
+.actions{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1}
+.pledge{font-size:.82em;color:var(--muted);text-align:center}
+.done{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.done svg.mascot{width:120px;height:120px}
+.recap{text-align:left;margin:0;padding-left:1.2em;line-height:1.7}
+.source{font-size:.75em;color:var(--muted)}
+
+/* chat */
+.chat .me{align-self:flex-end;max-width:85%;background:var(--accent);color:var(--on-accent);border-radius:18px 18px 4px 18px;padding:10px 14px}
+.chat .ai{display:flex;gap:8px;align-items:flex-start}
+.chat .ai svg{width:44px;height:44px;flex:none}
+.chat .ai .col{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.chat .ai .card{border-radius:4px 18px 18px 18px}
+.chat .ai p,.chat .me p{white-space:pre-wrap;overflow-wrap:anywhere}
+/* learn */
+details.card summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary::after{content:"+";font-family:var(--display);font-size:1.4em;color:var(--accent)}
+details[open].card summary::after{content:"–"}
+details.card p{margin-top:8px}
+.ex{margin-top:8px;font-size:.9em;color:var(--muted)}
+
+/* scam quiz */
+.msg{background:var(--accent-soft);border-radius:18px 18px 18px 4px;padding:14px 16px}
+.msg small{display:block;color:var(--muted);margin-bottom:4px}
+.verdict{border-radius:16px;padding:14px 16px}
+.verdict.ok{background:var(--ok-soft);border-left:5px solid var(--ok)}
+.verdict.bad{background:var(--bad-soft);border-left:5px solid var(--bad)}
+.score{font-variant-numeric:tabular-nums}
+
+/* brand page */
+.brandcard{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;border-radius:24px;padding:24px 18px;
+  background:radial-gradient(120% 120% at 50% 30%, var(--night-2), var(--night));color:var(--night-ink)}
+.brandcard svg.mascot{width:170px;height:170px}
+.brandcard .slogan{font-family:var(--display);font-weight:800;font-size:2em;line-height:1.05}
+.brandcard .slogan em{font-style:normal;color:var(--glow)}
+.why{display:grid;gap:8px}
+.why .card b{display:block;font-family:var(--display);font-size:1.05em;color:var(--accent)}
+.lines{display:flex;flex-direction:column;gap:6px}
+.lines span{background:var(--glow-soft);border-radius:12px;padding:8px 12px;font-family:var(--display);font-weight:700}
+
+@media (prefers-reduced-motion: no-preference){
+  .screen{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px);opacity:.6}to{transform:none;opacity:1}}
+  .tail-glow{animation:pulse 2.8s ease-in-out infinite;transform-origin:60px 60px}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+  .hero .dot{animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.8}}
+  .bob{animation:bob 3.2s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+}
+
+/* ---------- abertura (splash) e escolha de modo ---------- */
+button.proto{font-family:inherit;color:var(--ink);background:none;cursor:pointer}
+main.full{padding-block:12px}
+.splash{position:relative;min-height:calc(100dvh - 24px);justify-content:space-between;align-items:center;text-align:center;padding:26px 0 14px;gap:24px}
+.splash>*{position:relative}
+.splash::before{content:"";position:absolute;inset:-12px -16px;pointer-events:none;
+  background:radial-gradient(70% 40% at 50% 34%,rgba(230,188,106,.24),transparent 70%),
+  linear-gradient(rgba(230,188,106,.07) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,rgba(230,188,106,.07) 1px,transparent 1px) 0 0/28px 28px;
+  -webkit-mask-image:radial-gradient(80% 62% at 50% 36%,#000,transparent 82%);mask-image:radial-gradient(80% 62% at 50% 36%,#000,transparent 82%)}
+.splash .tag{display:inline-flex;align-items:center;gap:7px;font-size:.68em;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--glow);white-space:nowrap;
+  border:1px solid rgba(230,188,106,.35);background:rgba(230,188,106,.08);border-radius:99px;padding:5px 11px}
+.splash .tag i{width:6px;height:6px;border-radius:50%;background:var(--glow);box-shadow:0 0 8px var(--glow)}
+.splash-mid{display:flex;flex-direction:column;align-items:center;gap:14px}
+.splash svg.mascot{width:168px;height:168px;filter:drop-shadow(0 18px 40px rgba(230,188,106,.4))}
+.splash-name{font-family:var(--display);font-weight:800;font-size:2.8em;line-height:1;letter-spacing:-.03em;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.splash .slogan{font-family:var(--display);font-weight:600;font-size:1.1em;line-height:1.3;color:var(--muted)}
+.splash .slogan em{font-style:normal;color:var(--ink)}
+.splash-bot{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.btn.big{width:100%;padding:18px 22px;font-size:1.1em;border-radius:99px}
+.pick-list{display:flex;flex-direction:column;gap:12px}
+.pick{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px}
+.pick:hover,.pick:active{border-color:var(--accent)}
+.pick .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:none;background:var(--grad);color:#17110A}
+.pick .ic svg{width:28px;height:28px}
+.pick[data-pick="kids"] .ic{background:linear-gradient(135deg,#B49BFF,#FF8AC2 55%,#FFC15E)}
+.pick[data-pick="acessivel"] .ic{background:#FFE14D}
+.pick div{flex:1;min-width:0}
+.pick b{display:block;font-family:var(--display);font-size:1.15em}
+.pick small{color:var(--muted);font-size:.85em}
+.pick::after{content:"\203A";font-size:1.8em;color:var(--accent);line-height:1}
+
+/* vagalume ao lado do slogan */
+.sl-row{display:flex;align-items:center;gap:10px}
+.hero .sl-row{justify-content:space-between;width:100%}
+.hero svg.fly{width:86px;height:86px;flex:none;margin-right:-4px}
+.splash svg.fly{width:62px;height:62px;flex:none}
+.brandcard .sl-row{justify-content:center}
+.brandcard svg.fly{width:72px;height:72px;flex:none}
+@media (prefers-reduced-motion: no-preference){
+  .fly-glow{animation:pulse 2.4s ease-in-out infinite;transform-origin:60px 92px}
+}
+</style>
+
+<div class="app" id="app" data-mode="geral">
+  <header class="top">
+    <div class="brand" id="brandmark"></div>
+    <button class="proto" type="button" data-act="trocar">Trocar modo</button>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="tabs" aria-label="Seções">
+  <div class="in">
+    <button data-tab="inicio" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+    <button data-tab="aprender"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 8h6"/></svg>Aprender</button>
+    <button data-tab="proteger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Proteger</button>
+    <button data-tab="sobre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M12 13v3"/><circle cx="12" cy="19" r="2.2"/><path d="M9 5.5 7 3M15 5.5 17 3"/></svg>A Ailla</button>
+  </div>
+</nav>
+
+<script>
+/* ---------- Ícone da Ailla: "A" com órbita (substitui o vagalume; mesma função, mesmas chamadas) ---------- */
+let _m=0;
+function mascot(cls='mascot', mood='happy'){
+  const id='m'+(++_m);
+  let kids=false;try{kids=state.mode==='kids'&&state.stage==='app'}catch(e){}
+  const bg=kids?['#3B1F86','#6A2C9E','#B8398F']:['#26262A','#101012','#050506'];
+  const gold=kids?['#FFFFFF','#FFE27A','#FFB703','#FFF3B0']:['#FFF1C4','#E9C06C','#B98A3C','#F3D595'];
+  const orb=kids?['#4DE1FF','#7CFFB2','#FFE27A','#FF8AC2']:gold;
+  const spark=kids?'#FF8AC2':'#FFF1C4';
+  const ring=mood==='wow'?`<circle class="tail-glow" cx="60" cy="60" r="52" fill="none" stroke="${kids?'#FF8AC2':'#E9C06C'}" stroke-width="1.5" opacity=".7"/>`:'';
+  return `<svg class="${cls}" viewBox="0 0 120 120" aria-hidden="true">
+  <defs>
+    <linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset=".55" stop-color="${bg[1]}"/><stop offset="1" stop-color="${bg[2]}"/></linearGradient>
+    <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${gold[0]}"/><stop offset=".4" stop-color="${gold[1]}"/><stop offset=".75" stop-color="${gold[2]}"/><stop offset="1" stop-color="${gold[3]}"/></linearGradient>
+    <linearGradient id="${id}o" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${orb[0]}"/><stop offset=".4" stop-color="${orb[1]}"/><stop offset=".75" stop-color="${orb[2]}"/><stop offset="1" stop-color="${orb[3]}"/></linearGradient>
+    <radialGradient id="${id}g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${gold[1]}" stop-opacity=".30"/><stop offset="1" stop-color="${gold[1]}" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#${id}b)"/>
+  <rect x="2.75" y="2.75" width="114.5" height="114.5" rx="29.25" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="1.5"/>
+  <circle class="tail-glow" cx="60" cy="62" r="40" fill="url(#${id}g)"/>
+  ${ring}
+  <path d="M32 94 L60 22 L88 94" fill="none" stroke="url(#${id}a)" stroke-width="9.5" stroke-linejoin="miter" stroke-miterlimit="1.6" stroke-linecap="butt"/>
+  <g transform="rotate(-24 60 68)"><ellipse cx="60" cy="68" rx="47" ry="14" fill="none" stroke="url(#${id}o)" stroke-width="4.6" stroke-linecap="round" stroke-dasharray="196 100" stroke-dashoffset="-14"/></g>
+  <circle cx="99" cy="50" r="3.4" fill="${spark}"/>
+</svg>`;
+}
+
+/* ---------- Vagalume (símbolo do "ilumina"), usado ao lado do slogan ---------- */
+function vagalume(cls='mascot', mood='happy'){
+  const id='v'+(++_m);
+  const mouth = mood==='wow'
+    ? '<ellipse cx="60" cy="53" rx="3.2" ry="3.8" fill="#14183A"/>'
+    : '<path d="M55 51.5 Q60 56.5 65 51.5" stroke="#14183A" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+  return `<svg class="${cls}" viewBox="0 0 120 120" aria-hidden="true">
+  <defs>
+    <radialGradient id="${id}g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFE680" stop-opacity=".9"/><stop offset=".5" stop-color="#FFC93C" stop-opacity=".35"/><stop offset="1" stop-color="#FFC93C" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}t" cx="42%" cy="35%" r="70%"><stop offset="0" stop-color="#FFFBE0"/><stop offset=".45" stop-color="#FFE066"/><stop offset="1" stop-color="#F5A913"/></radialGradient>
+    <radialGradient id="${id}h" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#6F7FF0"/><stop offset=".6" stop-color="#3D4BB8"/><stop offset="1" stop-color="#28317F"/></radialGradient>
+    <linearGradient id="${id}w" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset="1" stop-color="#BFD0FF" stop-opacity=".55"/></linearGradient>
+  </defs>
+  <circle class="fly-glow" cx="60" cy="92" r="30" fill="url(#${id}g)"/>
+  <g class="bob">
+    <path d="M52 66 C38 52 18 52 16 64 C14 76 34 80 50 72 Z" fill="url(#${id}w)" stroke="#9FB2F5" stroke-width="1.3"/>
+    <path d="M68 66 C82 52 102 52 104 64 C106 76 86 80 70 72 Z" fill="url(#${id}w)" stroke="#9FB2F5" stroke-width="1.3"/>
+    <path d="M24 65 C33 63 42 66 49 69" stroke="#9FB2F5" stroke-width="1" fill="none"/><path d="M96 65 C87 63 78 66 71 69" stroke="#9FB2F5" stroke-width="1" fill="none"/>
+    <ellipse cx="60" cy="93" rx="16.5" ry="15" fill="url(#${id}t)"/>
+    <path d="M45.5 87 Q60 82 74.5 87" stroke="#3D4BB8" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+    <ellipse cx="55" cy="96" rx="4" ry="2.6" fill="#fff" opacity=".7"/>
+    <ellipse cx="60" cy="73" rx="12.5" ry="10" fill="#2E3A9A"/>
+    <path d="M48 74 Q41 78 42 84" stroke="#2E3A9A" stroke-width="4.2" fill="none" stroke-linecap="round"/>
+    <path d="M72 72 Q81 66 82 58" stroke="#2E3A9A" stroke-width="4.2" fill="none" stroke-linecap="round"/>
+    <circle cx="82.5" cy="56.5" r="3" fill="#3D4BB8"/>
+    <path d="M52 26 Q49 15 42 13 Q38 12.5 38.5 16" stroke="#28317F" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M68 26 Q71 15 78 13 Q82 12.5 81.5 16" stroke="#28317F" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="38.5" cy="17" r="5" fill="#FFD84D" opacity=".35"/><circle cx="81.5" cy="17" r="5" fill="#FFD84D" opacity=".35"/>
+    <circle cx="38.5" cy="17" r="2.8" fill="#FFE680"/><circle cx="81.5" cy="17" r="2.8" fill="#FFE680"/>
+    <ellipse cx="60" cy="44" rx="23" ry="21" fill="url(#${id}h)"/>
+    <ellipse cx="51" cy="42" rx="7.4" ry="8.6" fill="#fff"/><ellipse cx="69" cy="42" rx="7.4" ry="8.6" fill="#fff"/>
+    <circle cx="52" cy="43.5" r="5.2" fill="#14183A"/><circle cx="68" cy="43.5" r="5.2" fill="#14183A"/>
+    <circle cx="54" cy="41" r="2" fill="#fff"/><circle cx="70" cy="41" r="2" fill="#fff"/>
+    <circle cx="50.5" cy="46" r=".9" fill="#fff"/><circle cx="66.5" cy="46" r=".9" fill="#fff"/>
+    <ellipse cx="43.5" cy="51" rx="3.6" ry="2.2" fill="#FF8FA8" opacity=".75"/><ellipse cx="76.5" cy="51" rx="3.6" ry="2.2" fill="#FF8FA8" opacity=".75"/>
+    ${mouth}
+  </g></svg>`;
+}
+
+const ICON = {
+  pix:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l9 9-9 9-9-9z"/><path d="M8 12h8"/></svg>',
+  boleto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6v12M7 6v12M10 6v12M14 6v12M16 6v12M20 6v12"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>',
+  senha:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>',
+  mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  carro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 16V12l2-5h12l2 5v4z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/></svg>',
+  escola:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+  inss:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  letra:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l5-14 5 14M5 14h6"/><path d="M15 19l3-8 3 8M16 16h4"/></svg>',
+  ouvido:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6M8 6v12M12 3v18M16 6v12M20 9v6"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  legenda:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 14h4M13 14h4M7 10h10"/></svg>',
+  familia:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5M13 20c0-2.5 1.8-4 4-4s4 1.5 4 4"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
+};
+
+/* ---------- Conteúdo de cada modo ---------- */
+const COMUM = {
+  link:{id:'link',pilar:'proteger',icon:'link',titulo:'Recebi um link estranho',sub:'O que fazer antes de tocar',kw:['link','sms','mensagem estranha','suspeit'],
+    passos:[
+     {t:'Não toque no link ainda.',h:'Só abrir alguns links já pode pedir seus dados ou instalar coisas ruins.'},
+     {t:'Veja quem mandou. Você conhece esse número?',h:'Golpistas usam números novos e fingem ser bancos, lojas ou parentes.'},
+     {t:'Desconfie de pressa, prêmio ou ameaça.',alerta:'"Sua conta será bloqueada hoje", "Você ganhou um prêmio" e "Preciso de dinheiro agora" são frases típicas de golpe.',h:'Quem te apressa quer que você não pense.'},
+     {t:'Confirme por outro caminho.',h:'Ligue para o número oficial que você já conhece. Nunca use o telefone que veio na própria mensagem.'},
+     {t:'Apague, bloqueie e avise a família.',h:'Contar para outras pessoas ajuda a proteger mais gente.'}
+    ]}
+};
+
+const MODES = {
+ kids:{nome:'Kids',sub:'crianças',ola:'Oi! Bora aprender junto?',nota:'Conteúdo para crianças: escola, jogos, família e segurança na internet.',
+  exemplos:['Como faço pesquisa da escola?','Alguém estranho falou comigo no jogo','Quero ligar para a vovó'],
+  tarefas:[
+   {id:'pesquisa',pilar:'realizar',icon:'escola',titulo:'Pesquisar para a escola',sub:'Achar informação boa e segura',kw:['pesquis','escola','lição','trabalho','tarefa de casa'],
+    passos:[
+     {t:'Abra o navegador com um adulto por perto.',h:'Navegador é o app que abre a internet, como o Chrome ou o Safari.'},
+     {t:'Escreva poucas palavras sobre o tema.',h:'Exemplo: "ciclo da água para crianças". Não precisa escrever uma frase inteira.'},
+     {t:'Prefira sites de escolas, museus e enciclopédias.',alerta:'Não toque em anúncios que dizem "você ganhou" ou "clique aqui". Eles não são a sua pesquisa.',h:'Sites confiáveis mostram quem escreveu e não ficam cheios de propaganda.'},
+     {t:'Anote o que aprendeu com as suas palavras.',h:'Copiar tudo igualzinho não ensina. Explicar do seu jeito, sim!'}
+    ]},
+   {id:'video',pilar:'realizar',icon:'familia',titulo:'Ligar para os avós com vídeo',sub:'Chamada de vídeo no WhatsApp',kw:['vovó','vovô','avó','avô','vídeo','video','ligar','chamada'],
+    passos:[
+     {t:'Abra o WhatsApp, aquele ícone verde.',h:'Peça para um adulto deixar o celular desbloqueado.'},
+     {t:'Toque na conversa do vovô ou da vovó.',h:'Se não aparecer, toque na lupa e escreva o nome.'},
+     {t:'Toque no desenho da câmera lá em cima.',h:'O telefone faz ligação só de voz. A câmera faz com vídeo.'},
+     {t:'Espere tocar e dê um oi bem grande!',h:'Segure o celular um pouco longe do rosto para eles te verem.'},
+     {t:'Para desligar, toque no botão vermelho.',h:'Se o botão sumir, toque no meio da tela que ele aparece.'}
+    ]},
+   {id:'senha',pilar:'proteger',icon:'senha',titulo:'Criar uma senha secreta',sub:'Proteger seu jogo e suas contas',kw:['senha','conta do jogo'],
+    passos:[
+     {t:'Pense numa frase engraçada que só você sabe.',h:'Exemplo: "Meu cachorro voa de skate".'},
+     {t:'Junte as palavras com um número e um símbolo.',h:'Exemplo: MeuCachorro#Voa7. Quanto maior, mais forte.'},
+     {t:'Não use seu nome nem seu aniversário.',alerta:'Essas são as primeiras senhas que alguém tenta adivinhar.',h:'Seu nome e aniversário qualquer pessoa descobre.'},
+     {t:'Guarde a senha só com você e seus pais.',alerta:'Nem o melhor amigo precisa saber. E ninguém do jogo pode pedir sua senha.',h:'Se alguém pedir, conte para um adulto.'}
+    ]},
+   {id:'estranho',pilar:'proteger',icon:'chat',titulo:'Um estranho falou comigo',sub:'No jogo ou nas redes',kw:['estranho','jogo','desconhecido','falou comigo'],
+    passos:[
+     {t:'Não responda com nada sobre você.',h:'Nome completo, escola, endereço e fotos ficam só com você.'},
+     {t:'Nunca mande foto nem marque encontro.',alerta:'Gente que você não conhece pode mentir a idade e quem é.',h:'Na internet é fácil fingir ser outra pessoa.'},
+     {t:'Conte para um adulto de confiança.',h:'Você não fez nada de errado. Contar é a coisa mais corajosa.'},
+     {t:'Bloqueie e use o botão denunciar.',h:'Quase todo jogo tem um botão de denunciar. Peça ajuda para achar.'}
+    ]}
+  ],
+  glossario:[
+   {t:'Internet',d:'Uma rede enorme que liga computadores e celulares do mundo todo.',ex:'É por ela que você vê vídeos, joga e conversa.'},
+   {t:'Navegador',d:'O app que abre os sites da internet.',ex:'Chrome e Safari são navegadores.'},
+   {t:'Senha',d:'Uma palavra secreta que abre suas contas.',ex:'É como a chave de casa: não se empresta.'},
+   {t:'Dados pessoais',d:'Coisas que mostram quem você é: nome completo, escola, endereço, fotos.',ex:'Só compartilhe com adultos de confiança.'},
+   {t:'Anúncio',d:'Propaganda que aparece no meio dos sites e jogos.',ex:'Muitos tentam fazer você clicar. Ignore.'},
+   {t:'Fake news',d:'Notícia mentirosa que parece verdade.',ex:'Antes de acreditar, pergunte para um adulto ou professor.'},
+   {t:'Cyberbullying',d:'Quando alguém humilha ou ameaça outra pessoa pela internet.',ex:'Se acontecer com você ou com um amigo, conte para um adulto.'},
+   {t:'Print',d:'Uma foto da tela do celular.',ex:'Ajuda a mostrar para um adulto algo estranho que apareceu.'}
+  ],
+  quiz:[
+   {de:'Mensagem no jogo',m:'Ganhe 10 mil moedas grátis! É só colocar a senha da sua conta aqui.',golpe:true,exp:'Ninguém dá moedas grátis em troca da senha. Quem pega sua senha rouba sua conta.'},
+   {de:'Desconhecido',m:'Oi, tenho a sua idade! Qual é a sua escola? Manda uma foto sua?',golpe:true,exp:'Não responda. Escola e foto são dados pessoais. Conte para um adulto e bloqueie.'},
+   {de:'Grupo da turma',m:'Professora: a lição de casa é a página 32 do livro de Ciências.',golpe:false,exp:'Parece seguro: veio do grupo da turma e não pede nada seu.'},
+   {de:'Aviso no site',m:'SEU CELULAR ESTÁ COM VÍRUS! Toque aqui agora para limpar!',golpe:true,exp:'Isso é propaganda enganosa. Feche a página e avise um adulto.'}
+  ]},
+
+ geral:{nome:'Adulto',sub:'adultos',ola:'Olá! O que você quer fazer hoje?',nota:'Tarefas do dia a dia, dinheiro digital e segurança para quem quer mais autonomia.',
+  exemplos:['Quero ir ao shopping','Como pago um boleto?','Quero pedir um carro por app'],
+  tarefas:[
+   {id:'pix',pilar:'realizar',icon:'pix',titulo:'Fazer um Pix',sub:'Enviar dinheiro pelo app do banco',kw:['pix','transferir','transferência','mandar dinheiro'],
+    passos:[
+     {t:'Abra o aplicativo do seu banco.',h:'Se o app pedir senha, digite com calma e sem ninguém olhando a tela.'},
+     {t:'Toque na opção "Pix".',h:'Pode estar na tela inicial ou dentro de "Transferir". O símbolo parece um losango.'},
+     {t:'Escolha como enviar: por chave Pix ou QR Code.',h:'Chave Pix é um "apelido" da conta: CPF, celular, e-mail ou código aleatório.'},
+     {t:'Digite o valor e confira o nome de quem vai receber.',alerta:'Confira o nome do destinatário e o valor. Se alguém está te apressando, pare e desconfie.',h:'O nome que aparece é o dono real da conta. Se não for quem você esperava, não continue.'},
+     {t:'Confirme com sua senha ou biometria.',h:'No final o banco mostra um comprovante. Salve ou compartilhe.'}
+    ]},
+   {id:'boleto',pilar:'realizar',icon:'boleto',titulo:'Pagar um boleto',sub:'Luz, água, compras',kw:['boleto','pagar conta','fatura','conta de luz','conta de água'],
+    passos:[
+     {t:'Abra o app do banco e toque em "Pagar".',h:'Tenha o boleto em mãos, no papel ou no celular.'},
+     {t:'Aponte a câmera para o código de barras.',h:'Se a câmera não ler, digite os números de baixo, a "linha digitável".'},
+     {t:'Confira o nome da empresa, o valor e a data.',alerta:'Boleto falso mostra o nome de uma pessoa ou empresa estranha. Se não bater, não pague.',h:'Na dúvida, ligue para a empresa pelo telefone oficial.'},
+     {t:'Confirme e guarde o comprovante.',h:'O comprovante prova que você pagou.'}
+    ]},
+   {id:'carro',pilar:'realizar',icon:'carro',titulo:'Pedir carro por aplicativo',sub:'Ir a um lugar com app de transporte',kw:['carro','uber','99','corrida','táxi','taxi','app de transporte'],
+    passos:[
+     {t:'Abra o app de transporte que você usa.',h:'Os mais comuns são Uber e 99. Se ainda não tem, baixe na loja de apps do celular.'},
+     {t:'Escreva para onde você quer ir em "Para onde?".',h:'O ponto de partida já aparece sozinho pelo GPS. Confira se está certo.'},
+     {t:'Veja o preço e o tempo, e escolha o tipo de carro.',h:'O preço aparece antes de confirmar. Opções mais simples costumam ser mais baratas.'},
+     {t:'Confirme e espere o motorista.',alerta:'Antes de entrar, confira a placa, o modelo do carro e o nome do motorista no app.',h:'Se algo não bater, não entre e cancele pelo app.'},
+     {t:'No fim, avalie a corrida.',h:'A avaliação ajuda outros passageiros.'}
+    ]},
+   {id:'senha',pilar:'proteger',icon:'senha',titulo:'Criar uma senha forte',sub:'Proteger suas contas',kw:['senha','password'],
+    passos:[
+     {t:'Pense numa frase que só você lembra.',h:'Exemplo: "Meu gato come pipoca no domingo".'},
+     {t:'Junte palavras, números e um símbolo.',h:'Exemplo: MeuGato#ComePipoca7. Quanto mais longa, melhor.'},
+     {t:'Evite datas, nomes e sequências.',alerta:'123456 e data de nascimento são as primeiras senhas que golpistas tentam.',h:'Essas informações aparecem nas suas redes sociais.'},
+     {t:'Use senhas diferentes para cada conta importante.',h:'Se uma vazar, as outras continuam seguras.'}
+    ]},
+   COMUM.link
+  ],
+  glossario:[
+   {t:'Pix',d:'Jeito de mandar dinheiro na hora, a qualquer dia e horário.',ex:'Por ser na hora, confira tudo antes de confirmar.'},
+   {t:'Chave Pix',d:'Um "apelido" da sua conta para receber Pix.',ex:'Pode ser CPF, celular, e-mail ou um código aleatório.'},
+   {t:'QR Code',d:'Quadradinho que a câmera do celular lê.',ex:'Usado para pagar, abrir sites e ver cardápios.'},
+   {t:'Boleto e linha digitável',d:'Cobrança com código de barras. A linha digitável são os números de baixo.',ex:'Você digita os números quando a câmera não lê.'},
+   {t:'Débito e crédito',d:'Débito tira da conta na hora. Crédito é pago depois, na fatura.',ex:'Fatura atrasada gera juros altos.'},
+   {t:'Verificação em duas etapas',d:'Uma proteção extra além da senha, como um código por mensagem.',ex:'Esse código é só seu. Ninguém de verdade vai pedir.'},
+   {t:'GPS e localização',d:'Recurso que mostra onde o celular está no mapa.',ex:'Mapas e apps de transporte usam para traçar rotas.'},
+   {t:'Dados pessoais',d:'CPF, RG, endereço, número do cartão.',ex:'Só informe em sites e apps oficiais que você mesmo abriu.'}
+  ],
+  quiz:[
+   {de:'"Banco"',m:'Sua conta será BLOQUEADA hoje. Atualize seus dados: bit.ly/conta-seg',golpe:true,exp:'Banco não manda link encurtado nem ameaça bloqueio por mensagem. Abra o app oficial.'},
+   {de:'Número desconhecido',m:'Parabéns! Você ganhou um celular. Pague só o frete de R$ 19,90.',golpe:true,exp:'Prêmio que você não concorreu e pagamento para "liberar" é golpe clássico.'},
+   {de:'Loja onde você comprou',m:'Seu pedido saiu para entrega. Acompanhe pelo app da loja.',golpe:false,exp:'Parece seguro: não pede dados nem pagamento. Mesmo assim, acompanhe pelo app oficial.'},
+   {de:'Ligação',m:'"Sou do suporte do WhatsApp. Me fala o código de 6 números que chegou aí."',golpe:true,exp:'Esse código é a chave da sua conta. Nunca passe para ninguém.'},
+   {de:'"Vaga de emprego"',m:'Ganhe R$ 500 por dia curtindo vídeos. Pague R$ 30 de inscrição.',golpe:true,exp:'Emprego de verdade não cobra para você começar.'}
+  ]},
+
+ idoso:{nome:'60+',sub:'idosos',ola:'Olá! Vamos com calma, um passo de cada vez.',nota:'Assuntos que mais geram dúvida: INSS, família, letra pequena, Pix e golpes. Letras maiores.',
+  exemplos:['Quero ver meu pagamento do INSS','Quero ir à farmácia','Quero falar com meu neto por vídeo'],
+  tarefas:[
+   {id:'inss',pilar:'realizar',icon:'inss',titulo:'Ver meu pagamento do INSS',sub:'Extrato do benefício no Meu INSS',kw:['inss','aposentadoria','benefício','beneficio','extrato'],
+    links:[{rotulo:'Abrir o site Meu INSS',url:'https://meu.inss.gov.br'}],
+    passos:[
+     {t:'Abra o aplicativo Meu INSS, ou o site meu.inss.gov.br.',h:'O app é azul e gratuito. Se não tiver, peça para baixar na loja de aplicativos do celular.'},
+     {t:'Toque em "Entrar com gov.br" e digite seu CPF.',h:'Depois coloque a senha da sua conta gov.br. Se esqueceu, toque em "Esqueci minha senha".'},
+     {t:'Toque em "Extrato de Pagamento".',h:'Se não aparecer, use a busca e escreva "extrato".'},
+     {t:'Veja o valor e a data do seu pagamento.',alerta:'O INSS não liga pedindo senha e não cobra nada para liberar benefício. Se alguém fizer isso, é golpe.',h:'Você pode tirar um print desta tela para guardar.'}
+    ]},
+   {id:'video',pilar:'realizar',icon:'familia',titulo:'Falar com a família por vídeo',sub:'Chamada de vídeo no WhatsApp',kw:['vídeo','video','neto','neta','filho','filha','família','chamada'],
+    passos:[
+     {t:'Toque no ícone verde com um telefone branco.',h:'Esse é o WhatsApp. Se não achar, arraste a tela para o lado.'},
+     {t:'Toque no nome da pessoa na lista.',h:'Se ela não aparecer, toque na lupa no alto e escreva o nome.'},
+     {t:'Lá em cima, à direita, toque no desenho de câmera.',h:'O desenho de telefone liga só com voz. A câmera liga com imagem.'},
+     {t:'Espere a pessoa atender.',h:'Segure o celular na altura do rosto, um pouco afastado.'},
+     {t:'Para desligar, toque no botão vermelho.',h:'Se o botão sumir, toque uma vez no meio da tela.'}
+    ]},
+   {id:'letra',pilar:'realizar',icon:'letra',titulo:'Aumentar a letra do celular',sub:'Ler sem forçar a vista',kw:['letra','fonte','enxergar','tamanho','ler'],
+    passos:[
+     {t:'Abra "Configurações" (Android) ou "Ajustes" (iPhone).',h:'É o ícone de engrenagem cinza.'},
+     {t:'Toque em "Tela" ou "Tela e Brilho".',h:'Se não achar, use a lupa e escreva "fonte".'},
+     {t:'Toque em "Tamanho da fonte" ou "Tamanho do Texto".',h:'Vai aparecer uma barrinha.'},
+     {t:'Arraste a barrinha para a direita até ficar confortável.',h:'Você vê o exemplo mudando na hora. Pode voltar quando quiser.'}
+    ]},
+   {id:'pix',pilar:'realizar',icon:'pix',titulo:'Fazer um Pix com calma',sub:'Mandar dinheiro sem medo',kw:['pix','transferir','mandar dinheiro'],
+    passos:[
+     {t:'Procure o ícone do seu banco e toque nele uma vez.',h:'Digite a senha com calma, sem ninguém olhando a tela.'},
+     {t:'Procure a palavra "Pix" e toque nela.',h:'O símbolo do Pix parece um losango.'},
+     {t:'Toque em "Pagar com chave" e digite o CPF ou celular da pessoa.',h:'Peça esses dados diretamente para a pessoa, de preferência falando com ela.'},
+     {t:'Digite o valor e leia com atenção o nome que aparece.',alerta:'Se o nome for diferente da pessoa que você conhece, pare. Se estão te apressando, desconfie.',h:'Golpistas pedem pressa para você não conferir.'},
+     {t:'Toque em "Confirmar" e coloque sua senha.',h:'No final aparece o comprovante. Você pode mandar para a pessoa.'}
+    ]},
+   {id:'parente',pilar:'proteger',icon:'chat',titulo:'"Mãe, troquei de número"',sub:'Golpe do falso parente',kw:['troquei de número','falso parente','neto pediu','filho pediu','número novo'],
+    passos:[
+     {t:'Não mande dinheiro ainda.',h:'Esse golpe sempre começa com "troquei de número" e logo pede dinheiro.'},
+     {t:'Ligue para o número antigo da pessoa.',h:'Se ela atender, você descobre na hora que é golpe.'},
+     {t:'Faça uma pergunta que só a pessoa sabe.',h:'Exemplo: o nome do bicho de estimação da família.'},
+     {t:'Bloqueie o número e avise a família.',alerta:'Mesmo com foto do seu parente, pode ser golpe. A foto é copiada das redes sociais.',h:'Avise os outros parentes, porque o golpista tenta com todos.'}
+    ]}
+  ],
+  glossario:[
+   {t:'Aplicativo (app)',d:'Um programa do celular. Cada ícone da tela é um app.',ex:'WhatsApp, banco e Meu INSS são aplicativos.'},
+   {t:'Conta gov.br',d:'Seu cadastro único para entrar nos serviços do governo pela internet.',ex:'Usa seu CPF e uma senha que você cria.'},
+   {t:'Meu INSS',d:'App e site oficial do INSS para ver benefícios e extratos.',ex:'É gratuito. Ninguém pode cobrar para "liberar".'},
+   {t:'Pix',d:'Dinheiro que chega na hora, até domingo.',ex:'Por ser na hora, é difícil desfazer. Confira antes.'},
+   {t:'Biometria',d:'Usar o dedo ou o rosto no lugar da senha.',ex:'Mais fácil e mais seguro do que digitar.'},
+   {t:'Código de verificação',d:'Números que chegam por mensagem para confirmar que é você.',ex:'Nunca passe esse código para ninguém, nem por telefone.'},
+   {t:'Print',d:'Uma foto da tela do celular.',ex:'Ajuda a guardar comprovantes e a mostrar dúvidas para a família.'},
+   {t:'Golpe do falso parente',d:'Alguém finge ser filho ou neto com número novo e pede dinheiro.',ex:'Ligue para o número antigo antes de qualquer coisa.'}
+  ],
+  quiz:[
+   {de:'Número desconhecido',m:'Oi mãe, troquei de número. Pode me fazer um Pix de R$ 800? É urgente.',golpe:true,exp:'Golpe do falso parente: número novo, pedido de dinheiro e pressa. Ligue no número antigo.'},
+   {de:'"INSS"',m:'Seu benefício será cortado amanhã. Ligue para 0800 000 0000 e confirme seus dados.',golpe:true,exp:'O INSS não corta benefício por mensagem. Confira só no app Meu INSS ou no 135.'},
+   {de:'UBS do bairro',m:'Sua consulta está marcada para 12/11 às 9h. Leve documento com foto.',golpe:false,exp:'Parece seguro: não pede dinheiro, senha nem link. Na dúvida, ligue para a unidade.'},
+   {de:'Ligação',m:'"Sou do banco. Detectamos uma compra estranha. Me diga sua senha para cancelar."',golpe:true,exp:'Banco nunca pede senha. Desligue e ligue no número que está atrás do seu cartão.'},
+   {de:'Número desconhecido',m:'Você tem um valor a receber do governo! Pague a taxa de R$ 49 para liberar.',golpe:true,exp:'Valor a receber do governo nunca cobra taxa. Consulte só no site oficial.'}
+  ]},
+
+ acessivel:{nome:'Acessível',sub:'PcD',ola:'Olá! Eu leio cada passo em voz alta.',nota:'Recursos de acessibilidade do celular: leitor de tela, voz, letra, contraste e legendas.',
+  exemplos:['Quero ligar o leitor de tela','Quero escrever falando','Quero ir ao hospital'],
+  tarefas:[
+   {id:'leitor',pilar:'realizar',icon:'ouvido',titulo:'Ligar o leitor de tela',sub:'O celular lê tudo em voz alta',kw:['leitor de tela','talkback','voiceover','ler a tela','cego','baixa visão'],
+    passos:[
+     {t:'Abra "Configurações" (Android) ou "Ajustes" (iPhone).',h:'Também dá para pedir ao assistente de voz: "Ligar TalkBack" ou "Ligar VoiceOver".'},
+     {t:'Toque em "Acessibilidade".',h:'No Android pode estar dentro de "Configurações adicionais".'},
+     {t:'Toque em "TalkBack" (Android) ou "VoiceOver" (iPhone) e ative.',alerta:'Com o leitor ligado, um toque só lê o item. Para abrir, toque duas vezes rápido.',h:'Para rolar a tela, use dois dedos.'},
+     {t:'Pratique abrindo um app com dois toques.',h:'O próprio celular tem um tutorial de treino na mesma tela.'}
+    ]},
+   {id:'ditado',pilar:'realizar',icon:'mic',titulo:'Escrever falando',sub:'Ditar mensagens por voz',kw:['falando','ditar','voz','escrever falando','microfone'],
+    passos:[
+     {t:'Abra a conversa onde quer escrever.',h:'Funciona no WhatsApp, nas mensagens e em quase todo app.'},
+     {t:'Toque no microfone do teclado.',h:'É o microfone que fica no teclado, não o botão de áudio do WhatsApp.'},
+     {t:'Fale devagar e com clareza.',h:'Diga "vírgula" e "ponto" para pontuar.'},
+     {t:'Leia o texto antes de enviar.',alerta:'O ditado pode errar palavras. Confira, principalmente nomes e números.',h:'Toque na palavra errada para corrigir.'}
+    ]},
+   {id:'contraste',pilar:'realizar',icon:'letra',titulo:'Letra grande e alto contraste',sub:'Deixar a tela mais fácil de ver',kw:['contraste','letra','fonte','zoom','enxergar'],
+    passos:[
+     {t:'Abra "Configurações" e depois "Acessibilidade".',h:'No iPhone: Ajustes > Acessibilidade > Tela e Tamanho do Texto.'},
+     {t:'Ative "Texto em alto contraste" ou "Aumentar contraste".',h:'As letras ficam mais escuras e os fundos mais claros.'},
+     {t:'Aumente o "Tamanho da fonte".',h:'Arraste a barrinha até ficar confortável.'},
+     {t:'Se quiser, ative a "Ampliação".',h:'Com ela, três toques rápidos dão zoom em qualquer parte da tela.'}
+    ]},
+   {id:'legenda',pilar:'realizar',icon:'legenda',titulo:'Legendas automáticas',sub:'Ver em texto o que é falado',kw:['legenda','surdo','ouvir','audição','libras'],
+    passos:[
+     {t:'Abra "Configurações" e depois "Acessibilidade".',h:'No iPhone, procure "Legendas ao Vivo".'},
+     {t:'Ative "Legenda Instantânea" (Android) ou "Legendas ao Vivo" (iPhone).',h:'O celular escreve na tela o que está sendo falado em vídeos e áudios.'},
+     {t:'Abra um vídeo ou áudio para testar.',h:'A legenda aparece numa caixinha que você pode arrastar.'},
+     {t:'Para Libras, conheça o VLibras.',h:'É um tradutor gratuito do governo que mostra um avatar fazendo os sinais.'}
+    ],links:[{rotulo:'Conhecer o VLibras',url:'https://www.gov.br/governodigital/pt-br/vlibras'}]},
+   COMUM.link
+  ],
+  glossario:[
+   {t:'Leitor de tela',d:'Recurso que lê em voz alta tudo o que aparece na tela.',ex:'TalkBack no Android, VoiceOver no iPhone.'},
+   {t:'Ditado por voz',d:'Escrever falando, pelo microfone do teclado.',ex:'Diga "ponto" e "vírgula" para pontuar.'},
+   {t:'Alto contraste',d:'Cores mais fortes para separar texto e fundo.',ex:'Ajuda quem tem baixa visão.'},
+   {t:'Ampliação',d:'Lupa da tela: aumenta qualquer parte.',ex:'Ative em Acessibilidade e use três toques.'},
+   {t:'Legenda ao vivo',d:'O celular escreve o que está sendo falado.',ex:'Funciona em vídeos, áudios e chamadas.'},
+   {t:'VLibras',d:'Tradutor gratuito do governo de português para Libras.',ex:'Um avatar faz os sinais na tela.'},
+   {t:'Assistente de voz',d:'Você fala um comando e o celular responde.',ex:'"Abrir WhatsApp", "Ligar para Maria".'},
+   {t:'Pix',d:'Dinheiro que chega na hora pelo app do banco.',ex:'Os apps de banco funcionam com o leitor de tela.'}
+  ],
+  quiz:[
+   {de:'Número desconhecido',m:'Benefício especial para pessoas com deficiência! Pague R$ 50 de taxa para liberar.',golpe:true,exp:'Benefício do governo não cobra taxa. Consulte só em canais oficiais, como o gov.br.'},
+   {de:'"Banco"',m:'Sua conta será BLOQUEADA hoje. Atualize seus dados: bit.ly/conta-seg',golpe:true,exp:'Banco não manda link encurtado nem ameaça por mensagem. Use o app oficial.'},
+   {de:'Consultório',m:'Lembrete: consulta amanhã às 14h. Responda SIM para confirmar.',golpe:false,exp:'Parece seguro: só pede confirmação, sem dinheiro, senha ou link.'},
+   {de:'Ligação',m:'"Sou do suporte do WhatsApp. Me fala o código de 6 números que chegou aí."',golpe:true,exp:'Esse código é a chave da sua conta. Nunca passe para ninguém.'}
+  ]}
+};
+
+/* ---------- Estado ---------- */
+const state={mode:'geral',tab:'inicio',guide:null,step:0,help:false,quiz:0,acertos:0,resp:null,askMsg:'',thinking:false,onde:'',stage:'splash'};
+/* IA da Ailla: chama a função do próprio site (/api/ailla), que conversa com o Gemini sem expor a chave */
+async function chamarAilla(body,signal){
+  let r;
+  try{r=await fetch('/api/ailla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({modo:state.mode},body)),signal});}
+  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};throw {code:'network'}}
+  let d={};try{d=await r.json()}catch(e){}
+  if(r.status===429)throw {code:'rate_limited'};
+  if(!r.ok)throw {code:d.code||'error'};
+  return d;
+}
+let sampleFn=async(messages,opts={})=>{
+  const d=await chamarAilla({tipo:'chat',mensagens:messages.slice(1)},opts.signal);
+  const text=String(d.text||'');if(opts.onText&&text)opts.onText({text});return {text};
+};
+sampleFn.json=async(q)=>{const d=await chamarAilla({tipo:'guia',pedido:String(q).slice(0,300)});return d.json||null};
+let sampleState='ok';
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const M=()=>MODES[state.mode];
+
+function falar(texto){try{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(texto);u.lang='pt-BR';u.rate=state.mode==='idoso'?.9:1;speechSynthesis.speak(u)}catch(e){}}
+function calar(){try{speechSynthesis.cancel()}catch(e){}}
+
+/* ---------- Lugares e mapas ---------- */
+const LUGARES=['shopping','farmácia','farmacia','hospital','mercado','supermercado','padaria','banco','agência','posto','ubs','posto de saúde','restaurante','escola','parque','cinema','correios','prefeitura','poupatempo','academia','pet shop','lotérica','loterica','delegacia','igreja','praia','rodoviária','aeroporto','estação','metrô','metro','biblioteca','museu','feira'];
+function detectarLugar(q){
+  const m=q.match(/(?:ir\s+(?:ao|à|a|até\s+o|até\s+a|até|para\s+o|para\s+a|pro|pra|no|na)|chegar\s+(?:ao|à|no|na|até)|onde\s+fica\s+(?:o|a)?|perto\s+de\s+mim\s+(?:um|uma)?|achar\s+(?:um|uma)?|procurar\s+(?:um|uma)?)\s+([^?.!,]{2,40})/i);
+  if(m)return m[1].trim().replace(/\s+(mais\s+)?(perto|próximo|proximo).*$/i,'').trim();
+  const l=LUGARES.find(w=>q.includes(w));
+  return l||'';
+}
+const enc=encodeURIComponent;
+function mapLinks(lugar){
+  const alvo=state.onde?`${lugar} perto de ${state.onde}`:`${lugar} perto de mim`;
+  const dest=state.onde?`${lugar} ${state.onde}`:lugar;
+  return [
+   {rotulo:`Ver ${lugar} no mapa`,url:`https://www.google.com/maps/search/?api=1&query=${enc(alvo)}`,main:true},
+   {rotulo:'Rota de ônibus ou metrô',url:`https://www.google.com/maps/dir/?api=1&destination=${enc(dest)}&travelmode=transit`},
+   {rotulo:'Rota a pé',url:`https://www.google.com/maps/dir/?api=1&destination=${enc(dest)}&travelmode=walking`},
+   {rotulo:'Rota de carro',url:`https://www.google.com/maps/dir/?api=1&destination=${enc(dest)}&travelmode=driving`}
+  ];
+}
+function guiaLugar(lugar){
+  const kids=state.mode==='kids', idoso=state.mode==='idoso';
+  return {titulo:`Como chegar: ${lugar}`,lugar,fonte:'local',adulto:kids,
+   passos:[
+    {t:kids?"Chame um adulto para ir com você.":`Toque em "Ver ${lugar} no mapa", aqui embaixo.`,h:kids?'Criança não sai sozinha. O adulto ajuda a escolher o caminho.':'O mapa abre e mostra as opções mais perto de você. Se pedir permissão de localização, toque em "Permitir".'},
+    {t:'Escolha um que esteja aberto agora e veja a distância.',h:'No mapa aparecem o horário, a distância e as avaliações de cada lugar.'},
+    {t:'Toque em "Rotas" e escolha como ir: a pé, ônibus ou carro.',h:idoso?'O ônibus mostra o número da linha e onde descer. Anote num papel se ajudar.':'O mapa mostra o tempo de cada jeito de ir.'},
+    {t:'Confira o horário de funcionamento antes de sair.',alerta:'Se for de carro por aplicativo, confira a placa, o carro e o nome do motorista antes de entrar.',h:'Alguns lugares fecham mais cedo no fim de semana.'},
+    {t:'Siga as setas do mapa até chegar.',h:'O ponto azul é você. Se se perder, toque nele para o mapa se ajeitar.'}
+   ]};
+}
+
+/* ---------- Links seguros ---------- */
+const OK_DOM=['gov.br','google.com','whatsapp.com','bcb.gov.br','caixa.gov.br','correios.com.br','uber.com','99app.com','moovitapp.com','apple.com','android.com','support.google.com'];
+function linkSeguro(l){
+  try{const u=new URL(l.url);if(u.protocol==='https:'&&OK_DOM.some(d=>u.hostname===d||u.hostname.endsWith('.'+d)))return {rotulo:l.rotulo,url:u.href};}catch(e){}
+  return {rotulo:l.rotulo,url:'https://www.google.com/search?q='+enc(l.rotulo||'')};
+}
+
+/* ---------- Guia por IA (qualquer pergunta) ---------- */
+const PUBLICO={kids:'uma criança de 7 a 12 anos. Use frases curtas e alegres. Se o pedido envolver dinheiro, compras, encontros, sair sozinha ou temas de adulto, o primeiro passo deve ser chamar um adulto responsável.',
+ geral:'um adulto que quer mais autonomia no dia a dia. Seja direto.',
+ idoso:'uma pessoa idosa com pouca experiência com celular. Seja calmo, diga exatamente onde tocar, use palavras simples e reforce cuidados com golpes.',
+ acessivel:'uma pessoa com deficiência (visual, auditiva ou motora). Inclua dicas de acessibilidade quando fizer sentido, como leitor de tela, ditado por voz, legendas ou atalhos.'};
+function promptIA(q){
+  return `Você é a Ailla, uma vagalume que guia pessoas no mundo digital. Lema: "Ailla ilumina, você caminha." Você NUNCA faz a tarefa pela pessoa: só explica o passo a passo para ela mesma fazer no celular dela.
+Público: ${PUBLICO[state.mode]}
+Pedido da pessoa: "${q.slice(0,300)}"
+
+Responda SOMENTE com um JSON neste formato:
+{"titulo":"nome curto da tarefa","passos":[{"t":"instrução curta","ajuda":"explicação extra simples","alerta":"aviso de segurança ou string vazia"}],"lugar":"tipo de lugar físico se o pedido é ir a algum lugar (ex.: shopping, farmácia), senão string vazia","links":[{"rotulo":"texto do botão","url":"https://..."}]}
+Regras: português do Brasil; de 3 a 6 passos; cada "t" com no máximo 14 palavras; use "alerta" só em passos sensíveis (dinheiro, dados, senhas, desconhecidos, sair de casa). Nunca invente endereços, nomes de estabelecimentos ou telefones. Em "links", use no máximo 2 sites oficiais que você tenha certeza que existem (ex.: gov.br), ou deixe vazio. Se o pedido for perigoso ou ilegal, devolva passos que orientem a pessoa a buscar ajuda segura.`;
+}
+async function gerarGuia(q,lugar){
+  if(!sampleFn){if(lugar){abrir(guiaLugar(lugar));}return}
+  state.thinking=true;render();
+  try{
+    const r=await sampleFn.json(q);
+    state.thinking=false;
+    if(!r||!Array.isArray(r.passos)||!r.passos.length)throw {code:'invalid_json'};
+    abrir({titulo:String(r.titulo||'Seu passo a passo'),fonte:'ia',lugar:String(r.lugar||lugar||'').trim(),
+      links:(Array.isArray(r.links)?r.links:[]).slice(0,2).filter(l=>l&&l.url).map(linkSeguro),
+      passos:r.passos.slice(0,6).map(p=>({t:String(p.t||''),h:String(p.ajuda||'Faça com calma. Se travar, volte um passo.'),alerta:p.alerta?String(p.alerta):''})).filter(p=>p.t)});
+  }catch(e){state.thinking=false;if(lugar){abrir(guiaLugar(lugar));return}render()}
+}
+
+/* ---------- Conversa com a Ailla (Claude) ---------- */
+const chat={msgs:[],busy:false,ctl:null,open:false};
+function regras(){
+  return `Você é a Ailla, uma vagalume simpática dentro de um app de tecnologia assistiva. Lema: "Ailla ilumina, você caminha."
+Seu papel é GUIAR, nunca executar: você não faz nada pela pessoa, não acessa o celular dela e não realiza pagamentos. Você explica para ela mesma fazer.
+Público deste modo: ${PUBLICO[state.mode]}
+Como responder:
+- Português do Brasil, tom acolhedor e sem julgamento, sem termos técnicos.
+- Até 110 palavras. Texto simples, sem markdown, sem asteriscos e sem títulos.
+- Quando for uma tarefa, dê de 3 a 5 passos numerados (1., 2., 3.), cada um numa linha, e termine perguntando se a pessoa conseguiu ou travou em algum passo.
+- Antes de passos com dinheiro, senha, dados pessoais ou desconhecidos, escreva uma linha começando com "Atenção:".
+- Nunca invente endereços, nomes de lojas, telefones ou links.
+- Se a mensagem disser que o app vai mostrar botões de mapa, diga que os botões estão logo abaixo da sua resposta.
+- Se a pessoa fizer uma pergunta ou pesquisa de conhecimento (história, pessoas, ciência, geografia, curiosidades, significado de palavras, qualquer assunto), responda direto com a informação, em linguagem simples e sem passos numerados. Responder perguntas não é fazer a tarefa por ela: é iluminar o caminho. Se fizer sentido, termine sugerindo onde a pessoa pode aprender mais sozinha.
+- Se o pedido for perigoso, ilegal ou fora do seu papel, recuse com gentileza e indique um caminho seguro, como um adulto de confiança, um familiar ou um canal oficial.`;
+}
+function anexos(q){
+  const ql=q.toLowerCase();
+  const lugar=detectarLugar(ql);
+  const task=M().tarefas.find(t=>t.kw.some(k=>ql.includes(k)));
+  return {lugar,task:task?task.id:'',q};
+}
+function abrirChat(){chat.open=true;state.guide=null;render();}
+
+/* ---------- Pesquisa para todos, sem IA (Wikipédia) ---------- */
+function termoBusca(q){
+  let t=q.replace(/[?!.]+\s*$/,'').trim();
+  t=t.replace(/^(ailla[,!\s]+)?(oi[,!\s]+|olá[,!\s]+)?/i,'');
+  t=t.replace(/^(eu\s+)?(quero|queria|gostaria\s+de|preciso)\s+(pesquisar|saber|procurar|buscar|entender|aprender)(\s+(sobre|quem|o\s+que))?\s*/i,m=>/quem|o\s+que/i.test(m)?m.match(/quem|o\s+que/i)[0]+' ':'');
+  t=t.replace(/^(pesquis(e|ar|a)|busc(a|ar)|procur(a|ar)|me\s+(fala|diga|explica|conta))\s+(sobre\s+)?/i,'');
+  t=t.replace(/^(quem\s+(foi|é|era|são|foram)|o\s+que\s+(é|foi|são|significa|quer\s+dizer)|o\s+que|qual\s+(é|foi|era)|quando\s+(foi|aconteceu|começou)|onde\s+(fica|é)|como\s+funciona|por\s*que|pra\s+que\s+serve)\s+/i,'');
+  t=t.replace(/^(o|a|os|as|um|uma)\s+/i,'').trim();
+  return t||q;
+}
+async function wiki(q){
+  const t=termoBusca(q);
+  const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),8000);
+  try{
+    const s=await fetch('https://pt.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srlimit=1&srsearch='+enc(t),{signal:ctl.signal}).then(r=>r.json());
+    const hit=s&&s.query&&s.query.search&&s.query.search[0];if(!hit)return null;
+    const p=await fetch('https://pt.wikipedia.org/api/rest_v1/page/summary/'+enc(hit.title.replace(/ /g,'_')),{signal:ctl.signal}).then(r=>r.json());
+    if(!p||!p.extract||p.type==='disambiguation')return null;
+    let txt=p.extract.trim();
+    if(txt.length>650){const c=txt.slice(0,650);const fim=c.lastIndexOf('. ');txt=(fim>200?c.slice(0,fim+1):c+'…')}
+    return {titulo:p.title||hit.title,texto:txt,url:(p.content_urls&&p.content_urls.mobile&&p.content_urls.mobile.page)||('https://pt.m.wikipedia.org/wiki/'+enc(hit.title.replace(/ /g,'_')))};
+  }catch(e){return null}finally{clearTimeout(tm)}
+}
+async function wikiMais(titulo){
+  const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),8000);
+  try{
+    const r=await fetch('https://pt.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=plain&exchars=2200&format=json&origin=*&titles='+enc(titulo),{signal:ctl.signal}).then(r=>r.json());
+    const pg=r&&r.query&&r.query.pages?Object.values(r.query.pages)[0]:null;
+    const t=pg&&pg.extract?pg.extract.replace(/\n{2,}/g,'\n\n').trim():'';
+    return t||null;
+  }catch(e){return null}finally{clearTimeout(tm)}
+}
+async function semIA(q,x,resp){
+  if(x.lugar){resp.text=`Vamos chegar ao lugar que você quer! Os botões do mapa estão logo abaixo. Toque em "Ver no mapa", escolha o mais perto e depois toque em "Rotas".`;return}
+  if(x.task){resp.text='Tenho um guia pronto para isso. Toque no cartão abaixo e eu acendo a luz em cada passo.';return}
+  const w=await wiki(q);
+  resp.web={q,url:w?w.url:'',titulo:w?w.titulo:''};
+  resp.text=w?w.texto:'Não achei uma resposta para isso. Tente escrever só o nome do assunto, por exemplo: "fotossíntese" ou "Pedro Álvares Cabral".';
+}
+
+async function enviar(q){
+  q=q.trim();if(!q||chat.busy)return;
+  chat.open=true;state.guide=null;
+  const x=anexos(q);
+  chat.msgs.push({role:'user',text:q});
+  const resp={role:'assistant',text:'',x,pending:true};
+  chat.msgs.push(resp);
+  render();rolarFim();
+  if(!sampleFn){
+    chat.busy=true;
+    await semIA(q,x,resp);
+    resp.pending=false;chat.busy=false;render();rolarFim();
+    if(state.mode==='acessivel'&&resp.text)falar(resp.text);
+    return;
+  }
+  chat.busy=true;chat.ctl=new AbortController();render();
+  const hist=chat.msgs.filter(m=>!m.pending&&m.text).slice(-12).map(m=>({role:m.role,content:m.text}));
+  const ultimo=hist[hist.length-1];
+  if(ultimo&&x.lugar)ultimo.content+=`\n[O app vai mostrar botões do Google Maps para: ${x.lugar}]`;
+  try{
+    const r=await sampleFn([{role:'user',content:regras()},...hist],{cache:false,modelTier:'quick',signal:chat.ctl.signal,
+      onText:({text})=>{resp.text=text;resp.pending=false;const el=document.getElementById('ultima');if(el){el.textContent=text}else render();rolarFim()}});
+    resp.text=r.text;
+  }catch(e){
+    resp.text=e&&e.text?e.text:'';
+    if(e&&e.code==='not_granted'){sampleFn=null;await semIA(q,x,resp)}
+    else if(e&&e.code==='rate_limited')resp.text+=(resp.text?'\n\n':'')+'Muitas mensagens seguidas. Espere um pouquinho e mande de novo.';
+    else if(e&&e.code==='refused')resp.text='Esse assunto eu não consigo guiar. Que tal pedir ajuda a alguém de confiança?';
+    else if(!(e&&e.code==='cancelled')){resp.text='';await semIA(q,x,resp);if(!resp.web||!resp.web.titulo)resp.text='A luz piscou e a conexão caiu. Mande a mensagem de novo.'}
+  }
+  resp.pending=false;chat.busy=false;chat.ctl=null;render();rolarFim();
+  if(state.mode==='acessivel'&&resp.text)falar(resp.text);
+}
+function rolarFim(){requestAnimationFrame(()=>{const f=document.getElementById('fimchat');if(f)f.scrollIntoView({block:'end'})})}
+
+function viewChat(){
+  const md=M();
+  const bolhas=chat.msgs.map((m,i)=>{
+    const last=i===chat.msgs.length-1;
+    if(m.role==='user')return `<div class="me"><p>${esc(m.text)}</p></div>`;
+    const t=m.x&&m.x.task?md.tarefas.find(k=>k.id===m.x.task):null;
+    const extra=[];
+    if(!m.pending&&m.x&&m.x.lugar)extra.push(`<div class="go"><b>Mapas e rotas: ${esc(m.x.lugar)}</b><div class="row">${mapLinks(m.x.lugar).map(l=>`<a class="btn ${l.main?'glow':'line'}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.rotulo)}</a>`).join('')}</div><span class="note">Abre o Google Maps. Você escolhe o lugar e o caminho.</span></div>`);
+    if(!m.pending&&t)extra.push(taskCard(t));
+    if(!m.pending&&m.web&&m.web.titulo)extra.push(`<div class="go"><b>Fonte: Wikipédia · ${esc(m.web.titulo)}</b>${m.web.expandido?'':`<div class="row"><button class="btn glow" type="button" data-mais="${i}" ${m.web.carregando?'disabled':''}>${m.web.carregando?'Carregando…':'Ler mais aqui'}</button></div>`}<span class="note">${m.web.semMais?'Não consegui carregar mais texto agora. ':''}Confira sempre em mais de uma fonte.</span></div>`);
+    if(!m.pending&&sampleFn&&m.x&&!t&&m.text&&/^\s*1[.)]/m.test(m.text))extra.push(`<button class="btn line" data-guia="${i}">Fazer em modo passo a passo</button>`);
+    return `<div class="ai">${mascot('',m.pending?'wow':'happy')}<div class="col"><div class="card"><p ${last?'id="ultima"':''}>${m.pending?'Acendendo a luz…':esc(m.text)}</p></div>${extra.join('')}</div></div>`;
+  }).join('');
+  return `<section class="screen chat">
+   <button class="back" data-act="fecharchat">← Início</button>
+   <div class="ai">${mascot('')}<div class="col"><div class="card"><p>${esc(md.ola)} Me conta o que você quer fazer. Eu explico cada passo e você faz no seu celular.</p></div></div></div>
+   ${chat.msgs.length?'':`<div class="examples">${md.exemplos.map(x=>`<button data-ex="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+   ${bolhas}
+   ${state.thinking?'<p class="note">Montando o passo a passo…</p>':''}
+   <form class="ask" id="chatform"><label for="cq" style="position:absolute;left:-9999px">Mensagem para a Ailla</label>
+    <input id="cq" placeholder="Escreva para a Ailla" autocomplete="off">
+    ${chat.busy?'<button class="btn line" type="button" data-act="parar">Parar</button>':'<button class="btn glow" type="submit">Enviar</button>'}</form>
+   ${chat.msgs.length?'<button class="back" data-act="limpar" style="align-self:center">Começar nova conversa</button>':''}
+   <p class="pledge">Respostas geradas por IA. Ailla ilumina, você caminha.</p>
+   <span id="fimchat"></span>
+  </section>`;
+}
+
+/* ---------- Telas ---------- */
+function setMode(m){state.mode=m;chat.msgs=[];state.quiz=0;state.acertos=0;state.resp=null;state.askMsg='';$('#app').dataset.mode=m;document.body.classList.toggle('hc',m==='acessivel');try{localStorage.setItem('ailla-mode',m)}catch(e){};render()}
+
+function taskCard(t){return `<button class="card task" data-task="${t.id}"><span class="ic" aria-hidden="true">${ICON[t.icon]}</span><div><b>${esc(t.titulo)}</b><small>${esc(t.sub)}</small></div></button>`}
+
+function hero(){
+  const dots=[[78,16],[90,62],[66,82],[86,38],[72,8]].map(([x,y],i)=>`<i class="dot" style="left:${x}%;top:${y}%;animation-delay:${i*.6}s"></i>`).join('');
+  return `<div class="hero"><div class="hero-grid"></div>${dots}
+   <div class="hero-head">${mascot()}<span class="tag"><i></i>Assistente digital</span></div>
+   <div class="sl-row"><div><div class="slogan">Ailla ilumina,<br><em>você caminha.</em></div><p>Eu acendo a luz em cada passo. O caminho é seu.</p></div>${vagalume('fly')}</div></div>`;
+}
+
+function viewInicio(){
+  const md=M();
+  const real=md.tarefas.filter(t=>t.pilar==='realizar'), prot=md.tarefas.filter(t=>t.pilar==='proteger');
+  return `<section class="screen">
+   ${hero()}
+   <p class="mode-note">${md.nota}</p>
+   <div class="greet"><h1>${md.ola}</h1><p class="muted">Converse com a Ailla sobre qualquer coisa. Ela explica cada passo e você faz.</p></div>
+   <form class="ask" id="ask"><label for="q" style="position:absolute;left:-9999px">O que você quer fazer?</label>
+    <input id="q" placeholder='Ex.: "${esc(md.exemplos[0])}"' autocomplete="off" ${state.thinking?'disabled':''}><button class="btn glow" type="submit" ${state.thinking?'disabled':''}>Guiar</button></form>
+   <div class="examples">${md.exemplos.map(x=>`<button data-ex="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+   <div class="pillar"><div class="pillar-head"><span class="verb">Realizar</span><span class="muted">tarefas guiadas</span></div><div class="list">${real.map(taskCard).join('')}</div></div>
+   <div class="pillar"><div class="pillar-head"><span class="verb">Proteger</span><span class="muted">segurança digital</span></div><div class="list">${prot.map(taskCard).join('')}
+    <button class="card task" data-tab="proteger"><span class="ic" aria-hidden="true">${ICON.check}</span><div><b>Isso é golpe?</b><small>Treine com ${md.quiz.length} mensagens de exemplo</small></div></button></div></div>
+   <div class="pillar"><div class="pillar-head"><span class="verb">Aprender</span><span class="muted">${state.mode==='kids'?'palavras da internet':'educação financeira e digital'}</span></div>
+    <button class="card task" data-tab="aprender"><span class="ic" aria-hidden="true">${ICON.inss}</span><div><b>Entenda as palavras do mundo digital</b><small>${md.glossario.length} termos explicados de forma simples</small></div></button></div>
+  </section>`;
+}
+
+function viewGuide(){
+  const g=state.guide,n=g.passos.length;
+  const top=`<button class="back" data-act="sair">← Voltar</button>`;
+  if(state.step>=n){
+    return `<section class="screen guide">${top}<div class="done">
+     ${mascot()}
+     <h1>${state.mode==='kids'?'Mandou bem!':'Você conseguiu!'}</h1>
+     <p><b>Quem caminhou foi você.</b> Eu só acendi a luz.</p>
+     <div class="card" style="width:100%;text-align:left"><span class="label">O que você aprendeu</span><ol class="recap">${g.passos.map(p=>`<li>${esc(p.t)}</li>`).join('')}</ol></div>
+     <div class="row" style="width:100%"><button class="btn ghost" data-act="refazer">Fazer de novo</button><button class="btn" data-act="sair">Outra tarefa</button></div>
+    </div></section>`;
+  }
+  const p=g.passos[state.step];
+  const extras=[];
+  if(g.lugar){
+    extras.push(`<div class="go"><b>Mapas e rotas</b>
+     <label for="onde" class="note">Onde você está? (opcional: bairro ou cidade)</label>
+     <input class="field" id="onde" value="${esc(state.onde)}" placeholder="Usar minha localização">
+     <div class="row">${mapLinks(g.lugar).map(l=>`<a class="btn ${l.main?'glow':'line'}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.rotulo)}</a>`).join('')}</div>
+     <span class="note">Abre o Google Maps. Você escolhe o lugar e o caminho.</span></div>`);
+  }
+  if(g.links&&g.links.length){
+    extras.push(`<div class="go"><b>Sites oficiais</b><div class="row">${g.links.map(l=>`<a class="btn line" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.rotulo)}</a>`).join('')}</div></div>`);
+  }
+  return `<section class="screen guide">${top}
+   <div style="display:flex;flex-direction:column;gap:8px"><span class="label">${esc(g.titulo)}</span>
+    <div class="progress" aria-hidden="true">${g.passos.map((_,i)=>`<i class="${i<=state.step?'on':''}"></i>`).join('')}</div></div>
+   ${g.adulto&&state.step===0?`<div class="adult"><b>Faça junto com um adulto.</b> Essa tarefa é melhor com alguém de confiança do lado.</div>`:''}
+   <div class="bubble">${mascot('')}<div class="card"><span class="stepnum">Passo ${state.step+1} de ${n}</span><p class="instr" id="instr">${esc(p.t)}</p></div></div>
+   ${p.alerta?`<div class="alert" role="note"><b>Atenção:</b> ${esc(p.alerta)}</div>`:''}
+   ${state.help?`<div class="help"><b>Explicando melhor:</b> ${esc(p.h)}</div>`:''}
+   ${extras.join('')}
+   <div class="actions">
+    <button class="btn" data-act="prox">${state.step===n-1?'Pronto, terminei':'Já fiz, próximo passo'}</button>
+    <div class="row"><button class="btn ghost" data-act="ajuda">${state.help?'Entendi':'Não entendi'}</button>
+     <button class="btn line" data-act="ouvir">Ouvir</button>
+     ${state.step>0?'<button class="btn line" data-act="ant">Voltar passo</button>':''}</div>
+   </div>
+   <p class="pledge">Ailla ilumina, você caminha. A Ailla não mexe no seu celular.</p>
+   ${g.fonte==='ia'?'<p class="source">Guia montado na hora pela Ailla para o seu pedido.</p>':''}
+  </section>`;
+}
+
+function viewAprender(){
+  const md=M();
+  return `<section class="screen">
+   <div class="greet"><h1>${state.mode==='kids'?'Palavras da internet':'Entenda o que você está fazendo'}</h1>
+   <p class="muted">Modo ${md.nome}. Toque em uma palavra para abrir.</p></div>
+   <div class="list">${md.glossario.map(g=>`<details class="card"><summary>${esc(g.t)}</summary><p>${esc(g.d)}</p><p class="ex">${esc(g.ex)}</p></details>`).join('')}</div>
+  </section>`;
+}
+
+function viewProteger(){
+  const md=M(),Q=md.quiz;
+  const head=`<div class="greet"><h1>Isso é golpe?</h1><p class="muted">Leia a mensagem e decida. Treinar aqui ajuda a reconhecer na vida real.</p></div>`;
+  const guias=`<div class="pillar"><div class="pillar-head"><span class="verb">Proteger</span><span class="muted">guias de segurança</span></div><div class="list">${md.tarefas.filter(t=>t.pilar==='proteger').map(taskCard).join('')}</div></div>`;
+  if(state.quiz>=Q.length){
+    return `<section class="screen">${head}<div class="card done">${mascot()}<h2 class="score">Você acertou ${state.acertos} de ${Q.length}</h2>
+     <p>Pressa, prêmio, pedido de senha, código ou dinheiro são sinais de alerta.</p><button class="btn" data-act="quiz-reset">Treinar de novo</button></div>${guias}</section>`;
+  }
+  const q=Q[state.quiz];
+  return `<section class="screen">${head}
+   <span class="label score">Mensagem ${state.quiz+1} de ${Q.length}</span>
+   <div class="msg"><small>${esc(q.de)}</small>${esc(q.m)}</div>
+   ${state.resp===null?`<div class="row"><button class="btn" data-act="r-golpe">É golpe</button><button class="btn ghost" data-act="r-ok">Parece seguro</button></div>`:
+    `<div class="verdict ${state.resp===q.golpe?'ok':'bad'}"><b>${state.resp===q.golpe?'Acertou!':'Quase.'}</b> ${q.golpe?'Isso é golpe.':'Essa parece segura.'} ${esc(q.exp)}</div>
+     <button class="btn" data-act="q-prox">${state.quiz===Q.length-1?'Ver resultado':'Próxima mensagem'}</button>`}
+   ${guias}</section>`;
+}
+
+function viewSobre(){
+  return `<section class="screen">
+   <div class="brandcard">${mascot()}<div class="sl-row">${vagalume('fly')}<div class="slogan">Ailla ilumina,<br><em>você caminha.</em></div></div><p style="opacity:.85">Ailla · Simples. Seguro. Para todos.</p></div>
+   <div class="greet"><h2>Quem é a Ailla</h2><p>A Ailla é uma vagalume. Ela não carrega ninguém no colo e não faz o caminho no seu lugar. Ela acende uma luz para você enxergar o próximo passo, e quem anda é você.</p></div>
+   <div class="why">
+    <div class="card"><b>Por que uma vagalume?</b><p>O vagalume é a luz que aparece quando está escuro. Na tecnologia, o "escuro" é a dúvida, o medo de errar e o risco de golpe.</p></div>
+    <div class="card"><b>A luz é a orientação</b><p>A cauda dela brilha a cada passo. É o "guiar, não executar" virando imagem: a luz mostra, a pessoa faz.</p></div>
+    <div class="card"><b>Para todas as idades</b><p>Pequena, simpática e sem idade. Funciona com crianças, adultos, idosos e pessoas com deficiência.</p></div>
+    <div class="card"><b>Fácil de lembrar</b><p>"Ailla ilumina, você caminha" tem rima e traz o nome da marca. A pessoa ouve no fim de cada tarefa e liga a conquista à vagalume.</p></div>
+   </div>
+   <div class="pillar"><div class="pillar-head"><span class="verb">A Ailla fala assim</span></div>
+    <div class="lines"><span>"Vamos juntos? Eu acendo a luz, você dá o passo."</span><span>"Calma, vamos voltar um passo."</span><span>"Quem caminhou foi você. Eu só acendi a luz."</span><span>"Antes de confirmar, deixa eu acender um alerta."</span></div></div>
+   <div class="pillar"><div class="pillar-head"><span class="verb">Aprender → Realizar → Proteger</span></div>
+    <p class="muted">Os três pilares do MVP: explicar o que é cada coisa, guiar a tarefa e alertar sobre golpes antes que aconteçam.</p></div>
+  </section>`;
+}
+
+/* ---------- Abertura e escolha de modo ---------- */
+function viewSplash(){
+  return `<section class="screen splash">
+   <span class="tag"><i></i>Assistente digital</span>
+   <div class="splash-mid">${mascot()}<div class="splash-name">Ailla</div><div class="sl-row">${vagalume('fly')}<div class="slogan">Ailla ilumina,<br><em>você caminha.</em></div></div></div>
+   <div class="splash-bot"><button class="btn glow big" type="button" data-act="entrar">Entrar</button><span class="pledge">Protótipo acadêmico</span></div>
+  </section>`;
+}
+const PICKS=[
+  {k:'kids',t:'Kids',d:'Para crianças. Jogos, escola e segurança.',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>'},
+  {k:'geral',t:'Adulto',d:'Dia a dia, dinheiro digital e golpes.',ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>'},
+  {k:'idoso',t:'60+',d:'Letra maior e passo a passo com calma.',ic:'LETRA'},
+  {k:'acessivel',t:'Acessibilidade',d:'Voz, alto contraste e leitor de tela.',ic:'OUVIDO'}
+];
+function viewModos(){
+  return `<section class="screen">
+   <div class="greet"><h1>Como você quer usar a Ailla?</h1><p class="muted">Escolha um modo. O conteúdo e o visual se adaptam a você.</p></div>
+   <div class="pick-list">${PICKS.map(p=>`<button class="pick" type="button" data-pick="${p.k}"><span class="ic" aria-hidden="true">${p.ic==='LETRA'?ICON.letra:p.ic==='OUVIDO'?ICON.ouvido:p.ic}</span><div><b>${p.t}</b><small>${p.d}</small></div></button>`).join('')}</div>
+   <p class="pledge">Você pode trocar de modo depois, em "Trocar modo".</p>
+  </section>`;
+}
+function escolher(m){state.stage='app';state.tab='inicio';state.guide=null;chat.open=false;setMode(m);scrollTo(0,0)}
+
+function render(){
+  $('#brandmark').innerHTML=mascot('')+'<div><b>Ailla</b><small>Ailla ilumina, você caminha.</small></div>';
+  const v=$('#view');
+  const inApp=state.stage==='app';
+  $('#app').dataset.mode=inApp?state.mode:'geral';
+  document.body.classList.toggle('hc',inApp&&state.mode==='acessivel');
+  document.querySelector('header.top').hidden=!inApp;
+  document.querySelector('nav.tabs').hidden=!inApp;
+  v.className=inApp?'':'full';
+  if(!inApp){v.innerHTML=state.stage==='modes'?viewModos():viewSplash();return}
+  if(state.guide)v.innerHTML=viewGuide();
+  else if(chat.open)v.innerHTML=viewChat();
+  else if(state.tab==='aprender')v.innerHTML=viewAprender();
+  else if(state.tab==='proteger')v.innerHTML=viewProteger();
+  else if(state.tab==='sobre')v.innerHTML=viewSobre();
+  else v.innerHTML=viewInicio();
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current',!state.guide&&!chat.open&&b.dataset.tab===state.tab?'page':'false'));
+  if(state.guide&&state.mode==='acessivel'){const i=$('#instr');if(i)falar(i.textContent)}
+}
+
+function abrir(g){state.guide=g;state.thinking=false;state.step=0;state.help=false;state.askMsg='';state.onde='';render();scrollTo(0,0)}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pick){escolher(b.dataset.pick);return}
+  if(b.dataset.mais){const m=chat.msgs[+b.dataset.mais];if(!m||!m.web||m.web.carregando)return;m.web.carregando=true;render();
+    wikiMais(m.web.titulo).then(t=>{m.web.carregando=false;if(t&&t.length>m.text.length){m.text=t;m.web.expandido=true}else{m.web.semMais=true;m.web.expandido=true}render()});return}
+  if(b.dataset.mode){setMode(b.dataset.mode);return}
+  if(b.dataset.task){const t=M().tarefas.find(x=>x.id===b.dataset.task);if(t)abrir(t);return}
+  if(b.dataset.ex){enviar(b.dataset.ex);return}
+  if(b.dataset.guia){const m=chat.msgs[+b.dataset.guia];if(m&&m.x)gerarGuia(m.x.q,m.x.lugar);return}
+  if(b.dataset.tab){state.tab=b.dataset.tab;state.guide=null;chat.open=false;calar();render();scrollTo(0,0);return}
+  const a=b.dataset.act;if(!a)return;const g=state.guide;
+  if(a==='entrar'){state.stage='modes';render();scrollTo(0,0)}
+  else if(a==='trocar'){calar();if(chat.ctl)chat.ctl.abort();chat.open=false;state.guide=null;state.stage='modes';render();scrollTo(0,0)}
+  else if(a==='prox'){state.step++;state.help=false;render();scrollTo(0,0)}
+  else if(a==='ant'){state.step=Math.max(0,state.step-1);state.help=false;render()}
+  else if(a==='ajuda'){state.help=!state.help;render();if(state.help&&state.mode==='acessivel')falar(g.passos[state.step].h)}
+  else if(a==='ouvir'){const p=g.passos[state.step];falar(p.t+(p.alerta?' Atenção: '+p.alerta:''))}
+  else if(a==='refazer'){abrir(g)}
+  else if(a==='sair'){state.guide=null;calar();render();if(chat.open)rolarFim()}
+  else if(a==='fecharchat'){chat.open=false;calar();render();scrollTo(0,0)}
+  else if(a==='parar'){chat.ctl&&chat.ctl.abort()}
+  else if(a==='limpar'){if(chat.ctl)chat.ctl.abort();chat.msgs=[];render()}
+  else if(a==='r-golpe'||a==='r-ok'){state.resp=(a==='r-golpe');if(state.resp===M().quiz[state.quiz].golpe)state.acertos++;render()}
+  else if(a==='q-prox'){state.quiz++;state.resp=null;render()}
+  else if(a==='quiz-reset'){state.quiz=0;state.acertos=0;state.resp=null;render()}
+});
+document.addEventListener('input',e=>{
+  if(e.target.id!=='onde'||!state.guide)return;
+  state.onde=e.target.value.trim();
+  const links=mapLinks(state.guide.lugar);
+  document.querySelectorAll('.go a.btn').forEach((a,i)=>{if(links[i])a.href=links[i].url});
+});
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='ask'&&e.target.id!=='chatform')return;e.preventDefault();
+  const i=e.target.querySelector('input');const q=i.value.trim();if(!q)return;i.value='';enviar(q);
+});
+
+render();
+</script>
+
+</body></html>
